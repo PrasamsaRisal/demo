@@ -1,0 +1,152 @@
+#include <iostream>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+// class: WELCOME
+class WELCOME
+{
+public:
+	WELCOME()
+	{
+		cout << "========================================" << endl;
+		cout << "\tWelcome to the Home Grocery" << endl;
+		cout << "========================================" << endl;
+	}
+};
+
+// class: CUSTOMER_DETAILS
+class CUSTOMER_DETAILS
+{
+	string name;
+	long long contact_number;
+
+public:
+	void SetCustomerDetails()
+	{
+		cout << "Enter your full name: ";
+		cin.ignore(); // Clear buffer
+		getline(cin, name);
+		cout << "Enter contact number: ";
+		cin >> contact_number;
+	}
+
+	void PrintCustomerDetails()
+	{
+		cout << "\tCustomer Details" << endl;
+		cout << "\tName: " << name << endl;
+		cout << "\tContact Number: " << contact_number << endl;
+		cout << "-----------------------------------------------------" << endl;
+	}
+};
+
+// Class: PRODUCT_DETAIL
+class PRODUCT_DETAIL
+{
+	string item_name;
+	int quantity;
+	float price;
+
+public:
+	void InputProductDetail()
+	{
+		cout << "Enter item name: ";
+		cin >> item_name;
+		cout << "Enter quantity of the item: ";
+		cin >> quantity;
+		cout << "Enter the price of the item: ";
+		cin >> price;
+	}
+	string GetItem() { return item_name; }
+	int GetQuantity() { return quantity; }
+	float GetPrice() { return price; }
+	float TotalBilling() { return (float)quantity * price; }
+};
+
+// Class: ACTION_MENU
+class ACTION_MENU
+{
+public:
+	void Menu(CUSTOMER_DETAILS &cd)
+	{
+		bool end = false;
+		int choice;
+		float grand_total = 0;
+		int total_item = 0;
+		float discount = 0;
+
+		PRODUCT_DETAIL p[100];
+
+		while (!end)
+		{
+			cout << "\nOptions:" << endl;
+			cout << "1. Buy item" << endl;
+			cout << "2. Receipt" << endl;
+			cout << "3. Exit" << endl;
+			cout << "Enter choice: ";
+			cin >> choice;
+
+			switch (choice)
+			{
+			case 1:
+			{
+				int n;
+				cout << "How many items you want to add: ";
+				cin >> n;
+				for (int i = 0; i < n; i++)
+				{
+					cout << "Item " << (total_item + 1) << ":" << endl;
+					p[total_item].InputProductDetail();
+					grand_total += p[total_item].TotalBilling();
+					total_item++; // INCREMENT the counter
+				}
+				if (grand_total > 2500)
+				{
+					discount = grand_total * 0.05f;
+				}
+				break;
+			}
+			case 2:
+			{
+				cout << "\n\tHome Grocery\t\t" << endl;
+				cout << "-------------- Receipt --------------" << endl;
+				cd.PrintCustomerDetails();
+
+				cout << "\tPurchased Items" << endl;
+				for (int i = 0; i < total_item; i++)
+				{
+					cout << "\tItem: " << p[i].GetItem()
+						 << " | Qty: " << p[i].GetQuantity()
+						 << " | Price: " << p[i].GetPrice()
+						 << " | Total: " << p[i].TotalBilling() << endl;
+				}
+				cout << "-----------------------------------------------------" << endl;
+				cout << "\tTotal items: " << total_item << endl;
+				cout << "\tSub Total: " << grand_total << endl;
+				cout << "\tDiscount: " << discount << endl;
+				cout << "\tGrand Total: " << grand_total - discount << endl;
+				cout << "-----------------------------------------------------" << endl;
+				cout << "\t\tThank you, Visit again!!\t\t\t" << endl;
+				break;
+			}
+			case 3:
+				cout << "Exiting successfully..." << endl;
+				end = true;
+				break;
+			default:
+				cout << "Invalid choice!!" << endl;
+			}
+		}
+	}
+};
+
+int main()
+{
+	WELCOME w;
+	CUSTOMER_DETAILS cd;
+	cd.SetCustomerDetails();
+	ACTION_MENU am;
+	am.Menu(cd);
+	return 0;
+}
